@@ -1,0 +1,44 @@
+Tipagens:
+Estática: alterar o tipo de variável após declara não é possivel
+Dinamica: A linguagem escolhe o tipo de dado de acordo com o valor atribuido
+
+Fraca: Realiza conversões automaticamente entre diferentes tipos de dados
+Forte: Não realizam conversões automaticamente e
+, não permite um mesmo dado ser tratado
+como se fosse de outro tipo
+
+Compilar: Gera uma linguagem de maquina que é executada diretamente pelo sistema
+operacional ou pelo processador
+Interpretado: Roda em outro programa (interpretador), deve-se mandar o código fonte para
+rodar e a outra deve ter o interpretador
+Transpilado: Converte de uma linguagem para outra
+
+CSharp: Forte e estática, mas não entra em nenhuma das 3 outras, ela cria uma maquina
+virtual para interpretar e transformar em linguagem de maquina (compilar apenas o que será
+utilizado), mas antes de passar para o computador, ele compila para uma linguagem
+intermediaria que é bem mais proxima da de maquina (C# -> IL), ou seja, é todas ao mesmo
+tempo (JIT)
+.NET Framework: biblioteca enorme feita pela microsoft para C#, foi até 4.9
+.NET Core: novo .NET Framework, para frente de 5.0
+
+&& and
+|| or
+! not
+
+uLong: 8
+uInt: 4
+uShort: 2
+SByte: 1 byte
+
+Float 4
+Double 8
+Decimal 16
+
+Stack: fica na ram, muito mais rapido de acessar (pilha)
+Heap: fica "por baixo" do stack, mais lento de acessar (monte)
+Stack overflow: "Roubou" o espaço do Heap
+
+Dentro do heap - garbage collector vai passando (sobreviveu as passadas do gc)
+Geração 0: dados pouco utilizados
+Geração 1: mais utilizados que a 0
+Geração 2: muito utilizados, objetos grandes
