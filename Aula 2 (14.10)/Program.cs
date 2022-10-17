@@ -2,13 +2,13 @@
 
 int[] bin = new int[]
 {0, 0, 0, 0, 0, 0, 0, 0};
-int v1 = 64;
-int v2 = 33;
+int v1 = 127;
+int v2 = 16;
 int soma = 0;
 
 int BintoDec(int[] bin, int soma)
 {
-    for (int a = 0; a < 7;a++)
+    for (int a = 0; a < 8;a++)
     {
         if (bin[a] == 1)
         {
