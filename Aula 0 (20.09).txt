@@ -42,3 +42,56 @@ Dentro do heap - garbage collector vai passando (sobreviveu as passadas do gc)
 Geração 0: dados pouco utilizados
 Geração 1: mais utilizados que a 0
 Geração 2: muito utilizados, objetos grandes
+
+==========================================================================================
+
+DISRCT@CTPC3622 MINGW64 ~
+$ cd Desktop/aulas_cs/
+
+DISRCT@CTPC3622 MINGW64 ~/Desktop/aulas_cs (main)
+$ ls
+'Aula 0 (20.09).txt'  'Aula 1 (13.10)'/  'Aula 2 (14.10)'/
+
+DISRCT@CTPC3622 MINGW64 ~/Desktop/aulas_cs (main)
+$ dotnet new console -o aula_03_17.10
+O modelo "Aplicativo do Console" foi criado com êxito.
+
+Processando ações pós-criação...
+Executando 'dotnet restore' em C:\Users\disrct\Desktop\aulas_cs\aula_03_17.10\aula_03_17.10.csproj...
+  Determinando os projetos a serem restaurados...
+  C:\Users\disrct\Desktop\aulas_cs\aula_03_17.10\aula_03_17.10.csproj restaurado (em 106 ms).
+A restauração foi bem-sucedida.
+
+DISRCT@CTPC3622 MINGW64 ~/Desktop/aulas_cs (main)
+$ cd aula_03_17.10/
+
+DISRCT@CTPC3622 MINGW64 ~/Desktop/aulas_cs/aula_03_17.10 (main)
+$ code .
+
+DISRCT@CTPC3622 MINGW64 ~/Desktop/aulas_cs/aula_03_17.10 (main)
+$ dotnet new gitignore
+O modelo "arquivo de dotnet gitignore" foi criado com êxito.
+
+
+DISRCT@CTPC3622 MINGW64 ~/Desktop/aulas_cs/aula_03_17.10 (main)
+$ git add .
+
+DISRCT@CTPC3622 MINGW64 ~/Desktop/aulas_cs/aula_03_17.10 (main)
+$ git commit -m"commit com gitignore"
+[main ea05ef2] commit com gitignore
+ 1 file changed, 454 insertions(+)
+ create mode 100644 aula_03_17.10/.gitignore
+
+DISRCT@CTPC3622 MINGW64 ~/Desktop/aulas_cs/aula_03_17.10 (main)
+$ git push origin main
+Enumerating objects: 33, done.
+Counting objects: 100% (33/33), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (25/25), done.
+Writing objects: 100% (29/29), 9.75 KiB | 554.00 KiB/s, done.
+Total 29 (delta 4), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (4/4), completed with 1 local object.
+remote: This repository moved. Please use the new location:
+remote:   https://github.com/andrevpc/CSharp.git
+To https://github.com/andrevpc/csharp-bosch.git
+   a83abd7..ea05ef2  main -> main
