@@ -2,20 +2,20 @@
 
 int[] bin = new int[]
 {0, 0, 0, 0, 0, 0, 0, 0};
-int v1 = 127;
-int v2 = 16;
+int v1 = 200;
+int v2 = 150;
 int soma = 0;
 
 int BintoDec(int[] bin, int soma)
 {
-    for (int a = 0; a < 8;a++)
+    for (int a = 7, elevado = 0; a > -1;a--, elevado++)
     {
         if (bin[a] == 1)
         {
-            soma += (int)(Math.Pow(2, a));
+            soma += (int)(Math.Pow(2, elevado));
         }
     }
-    Console.WriteLine(soma);
+    Console.WriteLine("\n"+soma);
     return soma;
 }
 

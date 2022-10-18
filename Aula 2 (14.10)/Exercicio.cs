@@ -1,21 +1,42 @@
-
 namespace Aula_02
 {
     class Programa
     {
         static void Main(string[] args)
         {
+            Random rnd = new Random();
+
             byte[] arr = new byte[10];
+
+            rnd.NextBytes(arr);
+
             byte[] compactado = compress(arr);    
             byte[] descompactado = decompress(compactado);
+
+            printArr(arr);
+            printArr(compactado);
+            printArr(descompactado);
+        }
+
+        static void printArr(byte[] arr)
+        {
+            foreach(var i in arr) 
+            {
+                Console.Write(i + " ");
+            }
+            Console.Write("\n\n");
+
         }
 
         static byte[] decompress(byte[] arr)
         {
             byte[] newArr = new byte[arr.Length * 2];
-
-            for(int i = 0, j = 0; i<arr.Length; i+=2, j++)
-                newArr[j] = (byte) ((arr[i] >> 4 << 4));
+        
+            for(int i = 0, j = 0; i<arr.Length; i++, j+=2)
+            {
+                newArr[j] = (byte) ((arr[i] >> 4 << 4)); //1010 1111 - 1010 0000
+                newArr[j + 1] = (byte)(arr[i] << 4); //1010 1111 - 1111 0000
+            }
 
             return newArr;
         }
