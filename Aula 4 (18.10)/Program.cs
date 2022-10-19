@@ -122,6 +122,8 @@ public abstract class Gates
     public bool IsConnected {get;set;}
     public abstract void Receive (bool valor);
     public abstract void Connect(Gates target);
+    public abstract void Next(Gates target);
+    public abstract void Update(Gates target);
 }
 
 public class Input : Gates
