@@ -108,6 +108,14 @@ namespace Aula
             return new Complex(somaReal, somaImag);
         }
 
+        public static Complex operator - (Complex a, Complex b)
+        {
+            double somaReal = a.rValue - b.rValue;
+            double somaImag = a.iValue - b.iValue;
+
+            return new Complex(somaReal, somaImag);
+        }
+
         public override string ToString() => rValue + " + i" + iValue;
         
 
@@ -121,7 +129,9 @@ namespace Aula
             Complex cpx2 = new Complex(4, 3);
 
             Complex soma = cpx1 + cpx2;
+            Complex subtração = cpx1 - cpx2;
             Console.WriteLine(soma);
+            Console.WriteLine(subtração);
         }
     }
 }
