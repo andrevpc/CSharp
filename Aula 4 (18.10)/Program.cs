@@ -102,146 +102,135 @@ AndGate and = new AndGate();
 OrGate or = new OrGate();
 NotGate not = new NotGate();
 
-// a.Input1 = true;
-// b.Input1 = false;
-// c.Input1 = true;
-
 a.Connect(and);
 b.Connect(and);
-// c.Connect(or);
-// and.Connect(or);
-// or.Connect(not);
+c.Connect(or);
+and.Connect(or);
+or.Connect(not);
 
-a.Input1 = true;
-b.Input1 = false;
+b.IsOn = true;
+c.IsOn = true;
 
-Console.WriteLine(and.Output);
+Console.WriteLine(not.Output);
 
-public abstract class Gates
+public abstract class Component
 {
-    public bool Input1 {get;set;}
-    public bool Input2 {get;set;}
-    public bool Output {get;set;}
-    public bool IsConnected {get;set;}
-    protected Gates Next {get;set;}
-    public abstract void Receive (bool valor);
-    public abstract void Connect(Gates target);
+    public abstract bool Output { get; }
+
     public abstract void Update();
+
+    protected Component Next { get; private set; }
+    public void Connect(Component component)
+    {
+        this.Next = component;
+        this.Next.ConnectInput(this);
+    }
+
+    protected virtual void ConnectInput(Component component) { }
 }
 
-public class Input : Gates
+public class Input : Component
 {
-    public Input()
+    private bool ison = false;
+    public bool IsOn
     {
-        this.Output = this.Input1;
-    }
-    public override void Connect(Gates target)
-    {
-        this.Next = target;
-        this.Update();
-        target.Receive(this.Input1);
-    }
-    public override void Update()
-    {
-        if(this.Input1 == null)
-            return;
-        else
-            this.Next?.Update();
-    }
-    public override void Receive(bool valor)
-    {
-        this.Input1 = valor;
-    }
-}
-
-public class AndGate : Gates
-{
-    public AndGate()
-    {
-        this.Input1 = false;
-        this.Input2 = false;
-        this.Output = this.Input1 && this.Input2;
-        this.IsConnected = false;
-    }
-    public override void Connect(Gates target)
-    {
-        this.Output = this.Input1 && this.Input2;
-        this.Next = target;
-        target.Receive(this.Output);
-    }
-    public override void Update()
-    {
-        if( !IsConnected || Input2 == null)
-            return;
-        else
-            bool newOutput = this.Input1 && this.Input2;
-            if(NewOutput == Output)
-                return;
-            else
-                this.Output = this.NewOutput;
-                this.Next?.Update();
-    }
-    public override void Receive(bool valor)
-    {
-         if (this.IsConnected == false)
+        get => ison;
+        set
         {
-            this.Input1 = valor;
-            this.IsConnected = true;
-        }
-        else
-        {
-            this.Input2 = valor;
-            this.IsConnected = false;
+            this.ison = value;
+            this.Update();
         }
     }
+
+    public override bool Output => ison;
+
+    public override void Update()
+        => this.Next?.Update();
 }
 
-// public class OrGate : Gates
-// {
-//     public OrGate()
-//     {
-//         this.Input1 = false;
-//         this.Input2 = false;
-//         this.Output = this.Input1 || this.Input2;
-//         this.IsConnected = false;
-//     }
-//     public override void Connect(Gates target)
-//     {
-//         this.Output = this.Input1 || this.Input2;
-//         target.Receive(this.Output);
-//     }
-//     public override void Receive(bool valor)
-//     {
-//          if (this.IsConnected == false)
-//         {
-//             this.Input1 = valor;
-//             this.IsConnected = true;
-//         }
-//         else
-//         {
-//             this.Input2 = valor;
-//             this.IsConnected = false;
-//         }
-//     }
-// }
+public abstract class BinaryComponent : Component
+{    
+    private Component inputA = null;
+    private Component inputB = null;
+    private bool state = false;
 
-// public class NotGate : Gates
-// {
-//     public NotGate()
-//     {
-//         this.Input1 = false;
-//         this.Input2 = false;
-//         this.IsConnected = false;
-//         this.Output = !this.Input1;
-//     }
-//     public override void Connect(Gates target)
-//     {
-//         this.Output = !this.Input1;
-//         target.Receive(this.Output);
-//     }
-//     public override void Receive(bool valor)
-//     {
-//         this.Input1 = valor;
-//         this.Output = !this.Input1;
-//     }
-// }
+    public BinaryComponent(bool initial = false)
+        => this.state = initial;
+
+    public override bool Output => state;
+
+    public override void Update()
+    {
+        var ia = inputA?.Output ?? false;
+        var ib = inputB?.Output ?? false;
+        var newValue = computeNew(ia, ib);
+
+        if (newValue == state)
+            return;
+        
+        state = newValue;
+        this.Next.Update();
+    }
+
+    protected abstract bool computeNew(bool ia, bool ib);
+
+    protected override void ConnectInput(Component component)
+    {
+        if (inputA == null)
+            this.inputA = component;
+        else if (inputB == null)
+            this.inputB = component;
+    }
+}
+
+public class AndGate : BinaryComponent
+{
+    protected override bool computeNew(bool ia, bool ib)
+        => ia && ib;
+}
+
+public class NandGate : BinaryComponent
+{
+    public NandGate() : base(true) { }
+
+    protected override bool computeNew(bool ia, bool ib)
+        => !(ia && ib);
+}
+
+public class OrGate : BinaryComponent
+{
+    protected override bool computeNew(bool ia, bool ib)
+        => ia || ib;
+}
+
+public class XorGate : BinaryComponent
+{
+    protected override bool computeNew(bool ia, bool ib)
+        => ia ^ ib;
+}
+
+public class NotGate : Component
+{
+    private Component input = null;
+    private bool state = true;
+
+    public override bool Output => state;
+
+    public override void Update()
+    {
+        var i = input?.Output ?? false;
+        var newValue = !i;
+
+        if (newValue == state)
+            return;
+        
+        state = newValue;
+        this.Next.Update();
+    }
+
+    protected override void ConnectInput(Component component)
+    {
+        if (input == null)
+            this.input = component;
+    }
+}
