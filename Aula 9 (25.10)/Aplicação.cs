@@ -1,14 +1,41 @@
-public class Aplicacao
+public static class Aplicacao
 {
+    public static bool Running { get; set; } = true;
+    static List<Aluno> Alunos = new List<Aluno>();
+    static List<Curso> Cursos = new List<Curso>();
 
-    List<Aluno> Alunos = new List<Aluno>();
-    List<Curso> Cursos = new List<Curso>();
-
-
-    
-    public Aluno getAlunoByID(int id)
+    public static void Menu(int opcao)
     {
-        foreach (var aluno in this.Alunos)
+        switch(opcao)
+        {
+            case 1:
+                Cursos.Add(novoCurso());
+                break;
+            case 2:
+                foreach (var curso in Aplicacao.Cursos)
+                {
+                    Console.WriteLine(curso.NomeDoCurso);
+                }
+                break;
+            case 3:
+                Alunos.Add(novoAluno());
+                break;
+            case 4:
+                novaNota();
+                break;
+            case 5:
+                estatisticas();
+                break;
+            case 6:
+                Running = false;
+                break;
+        }
+    }
+    
+
+    public static Aluno getAlunoByID(int id)
+    {
+        foreach (var aluno in Aplicacao.Alunos)
         {
             if (aluno.Matricula == id)
             {
@@ -18,7 +45,7 @@ public class Aplicacao
         throw new Exception();
     }
 
-    public Aluno novoAluno()
+    public static Aluno novoAluno()
     {
         Console.WriteLine("Insira o nome do aluno: ");
         string nome = Console.ReadLine();
@@ -30,7 +57,7 @@ public class Aplicacao
         return new Aluno(nome, matricula, codigoCurso);
     }
 
-    public Curso novoCurso()
+    public static Curso novoCurso()
     {
         Console.WriteLine("Insira o nome do curso: ");
         string nomeDoCurso = Console.ReadLine();
@@ -42,20 +69,37 @@ public class Aplicacao
         return new Curso(codigo, nomeDoCurso, cargaHoraria);
     }
 
-    //Novo aluno
-    
-    // Alunos do curso by id
-
-    public void Menu()
+    public static void novaNota()
     {
+        Console.WriteLine("Insira o código do curso: ");
+        int codigoCurso = int.Parse(Console.ReadLine());
 
-
-        switch(opcao)
+        foreach (var aluno in Aplicacao.Alunos)
         {
-            case 1:
-                Cursos.add(novoCurso());
-                break;
+            if (aluno.CodigoCurso == codigoCurso)
+            {
+                Console.WriteLine($"Insira a nota do {aluno.Nome}: ");
+                int nota = int.Parse(Console.ReadLine());
+                aluno.Nota = nota;
+            }
         }
     }
 
+    public static void estatisticas()
+    {
+        Console.WriteLine("Insira o código do curso: ");
+        int codigoCurso = int.Parse(Console.ReadLine());
+        float soma = 0;
+        int cursando = 0;
+        foreach (var aluno in Aplicacao.Alunos)
+        {
+            if (aluno.CodigoCurso == codigoCurso)
+            {
+                soma += aluno.Nota;
+                cursando += 1;
+            }
+        }
+        float media = soma/cursando;
+        Console.WriteLine(media);
+    }
 }
