@@ -178,4 +178,10 @@ public static class MyExtensionMehods
         }
         stream.Close();
     }
+
+    public static IEnumerable<string[]> Split(this IEnumerable<string> coll)
+    {
+        foreach (var x in coll)
+            yield return x.Split(";");
+    }
 }
