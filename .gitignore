@@ -10,6 +10,11 @@
 *.userosscache
 *.sln.docstates
 
+Aula 13 (31.10)\INFLUD20-24-10-2022.csv
+aula_13/INFLUD21-24-10-2022.csv
+Aula 13 (31.10)\LAB_PR_COV.csv
+aula_13/LAB_PR_COV.csv
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
