@@ -39,36 +39,36 @@
 
 // var coll = infinity();
 
-// foreach (var x in coll)
-// {
-//     Console.WriteLine(x);
-// }
+foreach (var x in coll)
+{
+    Console.WriteLine(x);
+}
 
-// IEnumerable<long> infinity()
-// {
-//     for (long i = 0; true; i++)
-//         yield return i; //lista infinita
-// }
+IEnumerable<long> infinity()
+{
+    for (long i = 0; true; i++)
+        yield return i; //lista infinita
+}
 
-// var file = open("LAB_PR_COV.csv");
+var file = open("LAB_PR_COV.csv");
 
-// foreach(var line in file)
-// {
-//     Console.WriteLine(line);
-// }
+foreach(var line in file)
+{
+    Console.WriteLine(line);
+}
 
-// IEnumerable<string> open(string file)
-// {
-//     var stream = new StreamReader(file);
+IEnumerable<string> open(string file)
+{
+    var stream = new StreamReader(file);
     
-//     while(!stream.EndOfStream)
-//     {
-//         var line = stream.ReadLine();
-//         yield return line;
-//     }
+    while(!stream.EndOfStream)
+    {
+        var line = stream.ReadLine();
+        yield return line;
+    }
 
-//     stream.Close();
-// }
+    stream.Close();
+}
 
 var coll = "LAB_PR_COV.csv"
     .Open()
@@ -83,6 +83,14 @@ foreach (var x in coll)
 
 public static class MyExtensionMehods
 {
+    public static IEnumerable<T> Select<T,R>(
+        this IEnumerable<T> entrada,
+        Func<T, R> func) //Func = TransformadorGenerico2
+    {
+        var it = entrada.GetEnumerator();
+        while (it.MoveNext())
+            yield return func(it.Current);
+    }
     public static IEnumerable<T> Skip<T>(this IEnumerable<T> coll, int N)
     {
         var it = coll.GetEnumerator();
