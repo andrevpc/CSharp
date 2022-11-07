@@ -133,13 +133,13 @@
 //         if (valor<=5)
 //             this.Qualidade += (this.Qualidade * 0.15);
 
-//         else if(valor<=14 && valor>5)
+//         else if(valor<=14)
 //             this.Qualidade += (this.Qualidade * 0.10);
 
-//         else if(valor<=29 && valor>14)
+//         else if(valor<=29)
 //             this.Qualidade += (this.Qualidade * 0.05);
 
-//         else if(valor<=59 && valor>29)
+//         else if(valor<=59)
 //             this.Qualidade += 2;
         
 //         else
