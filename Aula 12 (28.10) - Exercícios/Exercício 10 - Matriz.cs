@@ -194,7 +194,22 @@ public class Matriz
 
     public static Matriz operator * (Matriz a, Matriz b)
     {
-        
+        if (a.Coluna != b.Linha)
+            throw new Exception();
+        Matriz multi = new Matriz(a.Linha,b.Coluna);
+        for(int i = 0; i < multi.Linha; i++)
+        {
+            for(int j = 0; j < multi.Coluna; j++)
+            {
+                int soma = 0;
+                for (int k = 0; k < a.Linha; k++)
+                {
+                    soma += a.Valores[i][k] * b.Valores[k][j];
+                }
+                multi.Valores[i][j] = soma;
+            }
+        }
+        return multi;
     }
 
     public static bool operator == (Matriz a, Matriz b)
@@ -241,7 +256,7 @@ public class Matriz
             for(int j = 0; j < mat.Coluna; j++)
             {
                 Random rand = new Random();
-                newMatrix.Valores[i][j] = rand.Next(1,100);
+                newMatrix.Valores[i][j] = rand.Next(1,10);
             }
         }
         return newMatrix;
