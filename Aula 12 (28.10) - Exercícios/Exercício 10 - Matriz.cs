@@ -59,6 +59,8 @@ public class Matriz
 
     public static Matriz Identidade(Matriz mat)
     {
+        if(!mat.IsSquare()) throw new Exception();
+        
         Matriz newMatrix = Matriz.Copiar(mat);
 
         for(int i = 0; i < mat.Linha; i++)
@@ -102,6 +104,8 @@ public class Matriz
     }
     public static Matriz Diagonal(Matriz mat)
     {
+        if(!mat.IsSquare()) throw new Exception();
+
         Matriz newMatrix = Matriz.Copiar(mat);
 
         for(int i = 0; i < mat.Linha; i++)
@@ -134,6 +138,25 @@ public class Matriz
         return di;
     }
     
+    public static Matriz Singular(Matriz mat)
+    {
+        if(!mat.IsSquare()) throw new Exception();
+
+        int valor = mat.Valores[0][0];
+
+        for(int i = 0; i < mat.Linha; i++)
+        {
+            for(int j = 0; j < mat.Coluna; j++)
+            {
+                if(i==j)
+                {
+                    mat.Valores[i][j] = valor;
+                }
+            }
+        }
+        return mat;
+    }
+
     public bool IsSingular()
     {
         if(!this.IsSquare()) return false;
@@ -157,9 +180,9 @@ public class Matriz
         return si;
     }
 
-    public bool Simetrica() => this == Matriz.Transposta(this);
+    public bool IsSimetrica() => this == Matriz.Transposta(this);
 
-    public bool AntiSimetrica() => Matriz.Transposta(this) == Matriz.Oposta(this);
+    public bool IsAntiSimetrica() => Matriz.Transposta(this) == Matriz.Oposta(this);
 
     public static Matriz operator + (Matriz a, Matriz b)
     {
@@ -236,6 +259,27 @@ public class Matriz
             for(int j = 0; j < mat.Coluna; j++)
             {
                 newMatrix.Valores[i][j] = mat.Valores[i][j];
+            }
+        }
+        return newMatrix;
+    }
+
+    public static Matriz Input()
+    {
+        Console.WriteLine($"Linhas: ");
+        int linha = int.Parse(Console.ReadLine());
+        Console.WriteLine($"Linhas: ");
+        int coluna = int.Parse(Console.ReadLine());
+
+        Matriz newMatrix = new Matriz(linha, coluna);
+
+        for(int i = 0; i < linha; i++)
+        {
+            for(int j = 0; j < linha; j++)
+            {
+                Console.WriteLine($"i = {i} j = {j}");
+                int inp = int.Parse(Console.ReadLine());
+                newMatrix.Valores[i][j] = inp;
             }
         }
         return newMatrix;
