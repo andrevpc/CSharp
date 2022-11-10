@@ -17,13 +17,13 @@ public class Matriz
 
     public static Matriz Transposta(Matriz mat)
     {
-        Matriz newMatrix = Matriz.Copiar(mat);
+        Matriz newMatrix = new Matriz(mat.Coluna, mat.Linha);
 
         for(int i = 0; i < mat.Linha; i++)
         {
             for(int j = 0; j < mat.Coluna; j++)
             {
-                newMatrix.Valores[i][j] = mat.Valores[j][i];
+                newMatrix.Valores[j][i] = mat.Valores[i][j];
             }
         }
         return newMatrix;
@@ -100,7 +100,6 @@ public class Matriz
         }
         return id;
     }
-
     public static Matriz Diagonal(Matriz mat)
     {
         Matriz newMatrix = Matriz.Copiar(mat);
@@ -228,12 +227,7 @@ public class Matriz
         return ig;
     }
 
-    public static bool operator != (Matriz a, Matriz b)
-    {
-        if(a==b) return false;
-        else return true;
-    }
-
+    public static bool operator != (Matriz a, Matriz b) => !(a==b);
     public static Matriz Copiar(Matriz mat)
     {
         Matriz newMatrix = new Matriz(mat.Linha, mat.Coluna);
