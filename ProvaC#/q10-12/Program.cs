@@ -39,15 +39,21 @@ public class Pesquisador
     /// <summary>
     /// As disciplinas com mais de 10 caractéres no nome
     /// </summary>
+
     public static void Pesquisa1(Universidade uni)
     {
-        foreach(Disciplina d in uni.Disciplinas)
+        var mais = uni.Disciplinas.Where(d => d.Nome.Length > 10);
+        foreach(var d in mais)
         {
-            if(d.Nome.Length > 10)
-            {
-                Console.WriteLine(d.Nome);
-            }
+            Console.WriteLine(d.Nome);
         }
+        // foreach(Disciplina d in uni.Disciplinas)
+        // {
+        //     if(d.Nome.Length > 10)
+        //     {
+        //         Console.WriteLine(d.Nome);
+        //     }
+        // }
     }
 
     /// <summary>
@@ -55,20 +61,40 @@ public class Pesquisador
     /// </summary>
     public static void Pesquisa2(Universidade uni)
     {
-        uni.Departamentos.OrderBy(c => c.Nome);
-        foreach(var dep in uni.Departamentos)
-        {
-            int count = 0;
-            foreach(var dis in uni.Disciplinas)
-            {
-                if (dep.ID == dis.DepartamentoID)
-                {
-                    count+=1;
-                }
-            }
+        var depdis = uni.Disciplinas.Join(uni.Departamentos,
+                            dis => dis.DepartamentoID,
+                            dep => dep.ID,
+                            (dis,dep) => new
+                            {
+                                NomeDep = dep.Nome,
+                                NomeDis = dis.Nome,
+                            });
+        var ord = depdis.GroupBy(dis => dis.NomeDep)
+                        .Select(dep => new {
+                            NomeDep = dep.Key,
+                            Disciplinas = dep.Count()
+                        }
+                        ).OrderBy(c => c.NomeDep);
 
-            Console.WriteLine($"Departamento: {dep.Nome} tem {count} disciplinas");
+        foreach(var dep in ord)
+        {
+            Console.WriteLine($"Departamento: {dep.NomeDep} -- Quantidade de disciplinas: {dep.Disciplinas}");
         }
+
+        // uni.Departamentos.OrderBy(c => c.Nome);
+        // foreach(var dep in uni.Departamentos)
+        // {
+        //     int count = 0;
+        //     foreach(var dis in uni.Disciplinas)
+        //     {
+        //         if (dep.ID == dis.DepartamentoID)
+        //         {
+        //             count+=1;
+        //         }
+        //     }
+
+        //     Console.WriteLine($"Departamento: {dep.Nome} tem {count} disciplinas");
+        // }
     }
 
     /// <summary>
@@ -76,23 +102,47 @@ public class Pesquisador
     /// </summary>
     public static void Pesquisa3(Universidade uni)
     {
-        var professornaturma = (from tur in uni.Turmas
-                                join pro in uni.Professores
-                                on tur.ProfessorID equals pro.ID
-                                select new {tur, pro, NomeProfessor = pro.Nome});
+        var professornaturma = uni.Turmas.Join(uni.Professores,
+                                            turma => turma.ProfessorID,
+                                            professor => professor.ID,
+                                            (turma, professor) => new
+                                            {
+                                                TurmaID = turma.ID,
+                                                Professor = professor.Nome
+                                            });
+        // var professornaturma = (from tur in uni.Turmas
+        //                         join pro in uni.Professores
+        //                         on tur.ProfessorID equals pro.ID
+        //                         select new { TurmaID = tur.ID, Professor = pro.Nome });
         
-        var alunocomprofessor = (from alu in uni.Alunos.TurmasMatriculados
-                                join pro in professornaturma.NomeProfessor
-                                on alu equals pro.ProfessorID
-                                select new {alu, pro});
+        var alunocomprofessor = uni.Alunos.Select(a =>
+                                                {
+                                                    var professores = professornaturma
+                                                        .Where(p => a.TurmasMatriculados.Contains(p.TurmaID))
+                                                        .DistinctBy(p => p.Professor)
+                                                        .Select(p => p.Professor);
+                                                    return new { Aluno = a.Nome, Professores = professores };
+                                                });
 
-        foreach(var x in alunocomprofessor)
+        // var alunocomprofessor = (from aluno in uni.Alunos
+        //                         let professores = professornaturma where );
+        
+        // var sla  = professornaturma
+        //     .GroupBy(p => p.Professor)
+        //     .Select(g => new { Professor = g.Key, Qtd = g.Count()});
+
+        // foreach (var item in sla)
+        // {
+        //     WriteLine(item);
+        // }
+        foreach (var item in alunocomprofessor)
         {
-            Console.WriteLine($"Aluno: {x.Nome}");
-            foreach(var y in x.TurmasMatriculados)
+            WriteLine(item.Aluno);
+            foreach (var item2 in item.Professores)
             {
-                Console.WriteLine($"-Professor: {y.NomeProfessor}");
+                Write($"{item2}, ");
             }
+            WriteLine("\n");
         }
     }
 
@@ -101,7 +151,22 @@ public class Pesquisador
     /// </summary>
     public static void Pesquisa4(Universidade uni)
     {
-        WriteLine("Não implementado!");
+        var alunoporturma = uni.Turmas.Select(t => new{
+            ProfessorID = t.ProfessorID,
+            QtdeAlunos = uni.Alunos.Where(a => a.TurmasMatriculados.Contains(t.ID)).Count()
+        }).Join(uni.Professores,
+                a => a.ProfessorID,
+                p => p.ID,
+                (a, p) => new{
+                    p.Nome,
+                    a.QtdeAlunos
+                });
+
+
+        foreach (var item in alunoporturma)
+        {
+            Console.WriteLine($"Professor: {item.Nome} -- Quanti: {item.QtdeAlunos}");
+        }
     }
 
     /// <summary>
@@ -109,7 +174,22 @@ public class Pesquisador
     /// </summary>
     public static void Pesquisa5(Universidade uni)
     {
-        WriteLine("Não implementado!");
+        var alunoporturma = uni.Turmas.Select(t => new{
+            ProfessorID = t.ProfessorID,
+            QtdeAlunos = uni.Alunos.Where(a => a.TurmasMatriculados.Contains(t.ID)).Count()
+        }).Join(uni.Professores,
+                a => a.ProfessorID,
+                p => p.ID,
+                (a, p) => new{
+                    p.Nome,
+                    a.QtdeAlunos
+                }).OrderByDescending(p => p.QtdeAlunos).Take(10);
+
+
+        foreach (var item in alunoporturma)
+        {
+            Console.WriteLine($"Professor: {item.Nome} -- Quanti: {item.QtdeAlunos}");
+        }
     }
 
     /// <summary>
@@ -118,7 +198,27 @@ public class Pesquisador
     /// </summary>
     public static void Pesquisa6(Universidade uni)
     {
-        WriteLine("Não implementado!");
+        var custodaturma = uni.Turmas.Select(t => new{
+            t.ID,
+            custo = uni.Professores.First(p => p.ID == t.ProfessorID).Salario / uni.Alunos.Where(a => a.TurmasMatriculados.Contains(t.ID)).Count()
+        });
+
+        var alunoporsala = uni.Alunos
+            .Select(a =>
+            {
+                var custo = custodaturma
+                    .Where(t => a.TurmasMatriculados.Contains(t.ID))
+                    .Sum(t => t.custo);
+                return new{
+                    a.Nome,
+                    Custo = 300 + custo
+                };
+            }).OrderByDescending(a => a.Custo);
+
+        foreach (var item in alunoporsala)
+        {
+            Console.WriteLine($"Aluno: {item.Nome, -30} -- Custo: {Math.Round(item.Custo, 2), 8}");
+        }
     }
 }
 
